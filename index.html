@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sandy - Nail Artist | Onglerie Élégante</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,6 +29,7 @@
             color: var(--noir);
             line-height: 1.6;
             overflow-x: hidden;
+            font-size: 16px;
         }
         h1, h2, h3 {
             font-family: 'Playfair Display', serif;
@@ -45,7 +46,7 @@
         .hero {
             background: linear-gradient(rgba(255, 209, 220, 0.7), rgba(255, 215, 0, 0.2)), 
                         url('https://images.unsplash.com/photo-1590845947676-fa2576f401d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350');
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -53,12 +54,14 @@
             background-size: cover;
             background-position: center;
             animation: fadeIn 1.5s;
+            padding: 20px;
         }
         .hero-content {
             background-color: rgba(255, 249, 240, 0.85);
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
         }
         .hero h1 {
             font-size: 3.5rem;
@@ -67,21 +70,6 @@
         .hero p {
             font-size: 1.2rem;
             margin-bottom: 30px;
-        }
-        .btn {
-            display: inline-block;
-            background-color: var(--rose-fonce);
-            color: white;
-            padding: 12px 30px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s;
-            border: 2px solid var(--rose-fonce);
-        }
-        .btn:hover {
-            background-color: transparent;
-            color: var(--rose-fonce);
         }
 
         /* === Réalisations (Vidéos) === */
@@ -101,6 +89,7 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.4s;
             background-color: var(--blanc);
+            aspect-ratio: 9/16;
         }
         .video-item:hover {
             transform: translateY(-10px);
@@ -108,7 +97,8 @@
         }
         .video-item video {
             width: 100%;
-            height: auto;
+            height: 100%;
+            object-fit: cover;
             border-radius: 15px 15px 0 0;
             display: block;
         }
@@ -122,12 +112,58 @@
             background-color: var(--rose);
             text-align: center;
         }
+        .calendar-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
         #calendar {
             background-color: white;
             border-radius: 15px;
-            padding: 20px;
+            padding: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-top: 30px;
+            margin: 30px auto 0;
+            min-width: 300px;
+            width: 100%;
+        }
+
+        /* Style spécifique pour FullCalendar */
+        .fc { 
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .fc-toolbar-title {
+            font-size: 1.2rem;
+            color: var(--rose-fonce);
+            white-space: normal;
+        }
+        
+        .fc-button {
+            background-color: var(--rose-fonce) !important;
+            border: none !important;
+            padding: 6px 10px !important;
+            transition: all 0.3s !important;
+            font-size: 0.8rem !important;
+        }
+        
+        .fc-button:hover {
+            opacity: 0.9 !important;
+            transform: translateY(-2px) !important;
+        }
+        
+        .fc-daygrid-day-number, .fc-col-header-cell-cushion {
+            color: var(--noir);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .fc-day-today {
+            background-color: var(--rose) !important;
+        }
+        
+        .fc-daygrid-event {
+            font-size: 0.7rem;
+            padding: 2px 4px;
         }
 
         /* === FAQ === */
@@ -247,15 +283,146 @@
         }
 
         /* === Responsive === */
-        @media (max-width: 768px) {
+        /* Grands mobiles (576px et plus) */
+        @media (min-width: 576px) {
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 2.8rem;
             }
-            .hero p {
+            .btn-rdv {
+                padding: 12px 25px;
                 font-size: 1rem;
             }
+            .fc-button {
+                padding: 6px 12px !important;
+                font-size: 0.9rem !important;
+            }
+        }
+
+        /* Tablettes (768px et plus) */
+        @media (min-width: 768px) {
+            section {
+                padding: 80px 40px;
+            }
+            .hero h1 {
+                font-size: 3.2rem;
+            }
             .video-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
+            }
+            #calendar {
+                padding: 20px;
+            }
+            .fc-toolbar-title {
+                font-size: 1.5rem;
+            }
+            .fc-daygrid-day-number, .fc-col-header-cell-cushion {
+                font-size: 1rem;
+            }
+        }
+
+        /* Petits écrans (moins de 576px) */
+        @media (max-width: 575.98px) {
+            .hero-content {
+                padding: 25px;
+                margin: 0 15px;
+            }
+            .hero h1 {
+                font-size: 2rem;
+                line-height: 1.2;
+            }
+            .hero p {
+                font-size: 0.9rem;
+                margin-bottom: 20px;
+            }
+            .btn-rdv {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            .whatsapp-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+                bottom: 20px;
+                right: 20px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            /* Adaptation calendrier mobile */
+            .fc-toolbar {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .fc-toolbar-title {
+                font-size: 1.1rem;
+                order: 1;
+                margin-bottom: 10px;
+            }
+            
+            .fc-toolbar-chunk:nth-child(1),
+            .fc-toolbar-chunk:nth-child(3) {
+                order: 2;
+            }
+            
+            .fc-header-toolbar {
+                margin-bottom: 0.5em !important;
+            }
+            
+            .fc-col-header-cell {
+                font-size: 0.7rem;
+                padding: 5px 2px !important;
+            }
+            
+            .fc-daygrid-day-frame {
+                min-height: 40px !important;
+            }
+        }
+
+        /* Très petits écrans (moins de 400px) */
+        @media (max-width: 400px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            .hero-content {
+                padding: 20px;
+            }
+            section {
+                padding: 40px 15px;
+            }
+            .whatsapp-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 22px;
+                bottom: 15px;
+                right: 15px;
+            }
+            .accordion-header {
+                padding: 12px 15px;
+                font-size: 0.9rem;
+            }
+            .fc-toolbar-title {
+                font-size: 1rem;
+            }
+            .fc-button {
+                padding: 4px 8px !important;
+                font-size: 0.7rem !important;
+            }
+        }
+
+        /* Mode paysage mobile */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .hero {
+                height: auto;
+                padding: 40px 0;
+            }
+            .hero-content {
+                margin: 20px;
+                max-width: 80%;
             }
         }
     </style>
@@ -294,8 +461,6 @@
                 </video>
                 <div class="video-caption">Ongles en gel artistiques</div>
             </div>
-            
-            <!-- Ajoutez d'autres vidéos ici -->
         </div>
     </section>
 
@@ -303,7 +468,9 @@
     <section id="dispo">
         <h2>Mes Disponibilités</h2>
         <p>Consultez mon calendrier et réservez votre créneau</p>
-        <div id="calendar"></div>
+        <div class="calendar-container">
+            <div id="calendar"></div>
+        </div>
     </section>
 
     <!-- FAQ -->
@@ -332,8 +499,6 @@
                     <p>Nous acceptons les espèces, cartes bancaires et virements.</p>
                 </div>
             </div>
-            
-            <!-- Ajoutez d'autres questions -->
         </div>
     </section>
 
@@ -346,66 +511,115 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/fr.min.js"></script>
     <script>
-        // === Calendrier Google Agenda ===
+        // === Calendrier Optimisé Mobile ===
         document.addEventListener('DOMContentLoaded', function() {
             const calendarEl = document.getElementById('calendar');
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'fr',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek'
-                },
-                events: {
-                    url: 'https://www.googleapis.com/calendar/v3/calendars/CALENDAR_ID/events?key=VOTRE_CLE_API',
-                    method: 'GET',
-                    failure: function() {
-                        alert('Erreur de chargement du calendrier');
+            if (calendarEl) {
+                const calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: window.innerWidth < 768 ? 'timeGridDay' : 'dayGridMonth',
+                    locale: 'fr',
+                    headerToolbar: {
+                        left: 'prev,next',
+                        center: 'title',
+                        right: window.innerWidth < 768 ? '' : 'dayGridMonth,timeGridWeek'
+                    },
+                    footerToolbar: {
+                        center: window.innerWidth < 768 ? 'today' : ''
+                    },
+                    buttonText: {
+                        today: 'Aujourd\'hui',
+                        month: 'Mois',
+                        week: 'Semaine',
+                        day: 'Jour'
+                    },
+                    firstDay: 1,
+                    height: 'auto',
+                    aspectRatio: window.innerWidth < 768 ? 1 : 1.5,
+                    navLinks: true,
+                    nowIndicator: true,
+                    dayMaxEvents: 2,
+                    eventTimeFormat: {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                    },
+                    events: [
+                        {
+                            title: 'Disponible',
+                            start: new Date(),
+                            color: '#FF6B9E',
+                            display: 'block'
+                        },
+                        {
+                            title: 'Complet',
+                            start: new Date(new Date().setDate(new Date().getDate() + 1)),
+                            color: '#cccccc'
+                        },
+                        {
+                            title: 'Disponible',
+                            start: new Date(new Date().setDate(new Date().getDate() + 3)),
+                            color: '#FF6B9E'
+                        }
+                    ],
+                    eventClick: function(info) {
+                        info.jsEvent.preventDefault();
+                        if (info.event.title === 'Disponible') {
+                            const dateStr = info.event.start.toLocaleDateString('fr-FR', {
+                                weekday: 'long',
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric'
+                            });
+                            window.open(`https://wa.me/33752089869?text=Bonjour%20Sandy,%20je%20souhaite%20réserver%20le%20${encodeURIComponent(dateStr)}`, '_blank');
+                        }
+                    },
+                    windowResize: function(arg) {
+                        if (window.innerWidth < 768) {
+                            calendar.changeView('timeGridDay');
+                        } else {
+                            calendar.changeView('dayGridMonth');
+                        }
                     }
-                },
-                eventClick: function(info) {
-                    info.jsEvent.preventDefault();
-                    window.open(`https://wa.me/33752089869?text=Bonjour%20Sandy,%20je%20souhaite%20réserver%20le%20${info.event.startStr}`, '_blank');
-                }
-            });
-            calendar.render();
-        });
+                });
 
-        // === FAQ Accordéon ===
-        const accordionHeaders = document.querySelectorAll('.accordion-header');
-        accordionHeaders.forEach(header => {
-            header.addEventListener('click', () => {
-                const item = header.parentElement;
-                item.classList.toggle('active');
-                
-                const icon = header.querySelector('i');
-                if (item.classList.contains('active')) {
-                    icon.classList.remove('fa-chevron-down');
-                    icon.classList.add('fa-chevron-up');
-                } else {
-                    icon.classList.remove('fa-chevron-up');
-                    icon.classList.add('fa-chevron-down');
-                }
-            });
-        });
+                calendar.render();
+            }
 
-        // === Animation au Scroll ===
-        const slideUpElements = document.querySelectorAll('.slide-up');
-        function checkSlide() {
-            slideUpElements.forEach(el => {
-                const slideInAt = (window.scrollY + window.innerHeight) - el.offsetHeight / 2;
-                const elementBottom = el.offsetTop + el.offsetHeight;
-                const isHalfShown = slideInAt > el.offsetTop;
-                const isNotScrolledPast = window.scrollY < elementBottom;
-                
-                if (isHalfShown && isNotScrolledPast) {
-                    el.classList.add('show');
-                }
+            // === FAQ Accordéon ===
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const item = header.parentElement;
+                    item.classList.toggle('active');
+                    
+                    const icon = header.querySelector('i');
+                    if (item.classList.contains('active')) {
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    } else {
+                        icon.classList.remove('fa-chevron-up');
+                        icon.classList.add('fa-chevron-down');
+                    }
+                });
             });
-        }
-        window.addEventListener('scroll', checkSlide);
-        checkSlide(); // Vérifie au chargement
+
+            // === Animation au Scroll ===
+            const slideUpElements = document.querySelectorAll('.slide-up');
+            function checkSlide() {
+                slideUpElements.forEach(el => {
+                    const slideInAt = (window.scrollY + window.innerHeight) - el.offsetHeight / 2;
+                    const elementBottom = el.offsetTop + el.offsetHeight;
+                    const isHalfShown = slideInAt > el.offsetTop;
+                    const isNotScrolledPast = window.scrollY < elementBottom;
+                    
+                    if (isHalfShown && isNotScrolledPast) {
+                        el.classList.add('show');
+                    }
+                });
+            }
+            window.addEventListener('scroll', checkSlide);
+            checkSlide();
+        });
     </script>
 </body>
 </html>
