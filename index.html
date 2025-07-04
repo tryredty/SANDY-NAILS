@@ -114,8 +114,7 @@
         }
         .calendar-container {
             width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+            overflow: hidden;
         }
         #calendar {
             background-color: white;
@@ -123,7 +122,6 @@
             padding: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             margin: 30px auto 0;
-            min-width: 300px;
             width: 100%;
         }
 
@@ -164,6 +162,15 @@
         .fc-daygrid-event {
             font-size: 0.7rem;
             padding: 2px 4px;
+        }
+        
+        /* Ajustements pour la vue semaine/mois de même taille */
+        .fc-dayGridMonth-view, .fc-timeGridWeek-view {
+            width: 100% !important;
+        }
+        
+        .fc-timeGridWeek-view .fc-timegrid-slots {
+            min-height: 600px; /* Hauteur fixe pour permettre le scroll */
         }
 
         /* === FAQ === */
@@ -511,20 +518,17 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/fr.min.js"></script>
     <script>
-        // === Calendrier Optimisé Mobile ===
+        // === Calendrier Optimisé ===
         document.addEventListener('DOMContentLoaded', function() {
             const calendarEl = document.getElementById('calendar');
             if (calendarEl) {
                 const calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: window.innerWidth < 768 ? 'timeGridDay' : 'dayGridMonth',
+                    initialView: 'dayGridMonth', // Affichage du mois en premier
                     locale: 'fr',
                     headerToolbar: {
-                        left: 'prev,next',
+                        left: 'prev,next today',
                         center: 'title',
-                        right: window.innerWidth < 768 ? '' : 'dayGridMonth,timeGridWeek'
-                    },
-                    footerToolbar: {
-                        center: window.innerWidth < 768 ? 'today' : ''
+                        right: 'dayGridMonth,timeGridWeek'
                     },
                     buttonText: {
                         today: 'Aujourd\'hui',
@@ -534,15 +538,11 @@
                     },
                     firstDay: 1,
                     height: 'auto',
-                    aspectRatio: window.innerWidth < 768 ? 1 : 1.5,
+                    contentHeight: 600, // Hauteur fixe pour les deux vues
+                    aspectRatio: 1.5,
                     navLinks: true,
                     nowIndicator: true,
-                    dayMaxEvents: 2,
-                    eventTimeFormat: {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false
-                    },
+                    dayMaxEvents: true,
                     events: [
                         {
                             title: 'Disponible',
@@ -559,30 +559,49 @@
                             title: 'Disponible',
                             start: new Date(new Date().setDate(new Date().getDate() + 3)),
                             color: '#FF6B9E'
+                        },
+                        {
+                            title: 'Disponible',
+                            start: new Date(new Date().setHours(10, 0, 0)),
+                            end: new Date(new Date().setHours(12, 0, 0)),
+                            color: '#FF6B9E'
                         }
                     ],
                     eventClick: function(info) {
                         info.jsEvent.preventDefault();
                         if (info.event.title === 'Disponible') {
-                            const dateStr = info.event.start.toLocaleDateString('fr-FR', {
-                                weekday: 'long',
-                                day: 'numeric',
-                                month: 'long',
-                                year: 'numeric'
-                            });
+                            let dateStr;
+                            if (info.view.type === 'dayGridMonth') {
+                                dateStr = info.event.start.toLocaleDateString('fr-FR', {
+                                    weekday: 'long',
+                                    day: 'numeric',
+                                    month: 'long',
+                                    year: 'numeric'
+                                });
+                            } else {
+                                dateStr = info.event.start.toLocaleTimeString('fr-FR', {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                }) + ' - ' + info.event.end.toLocaleTimeString('fr-FR', {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                });
+                            }
                             window.open(`https://wa.me/33752089869?text=Bonjour%20Sandy,%20je%20souhaite%20réserver%20le%20${encodeURIComponent(dateStr)}`, '_blank');
-                        }
-                    },
-                    windowResize: function(arg) {
-                        if (window.innerWidth < 768) {
-                            calendar.changeView('timeGridDay');
-                        } else {
-                            calendar.changeView('dayGridMonth');
                         }
                     }
                 });
 
+                // Ajustement pour mobile
+                function handleResize() {
+                    if (window.innerWidth < 768) {
+                        calendar.setOption('contentHeight', 600); // Même hauteur que la vue mois
+                    }
+                }
+
+                window.addEventListener('resize', handleResize);
                 calendar.render();
+                handleResize();
             }
 
             // === FAQ Accordéon ===
